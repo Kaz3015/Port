@@ -17,16 +17,15 @@ export default function App() {
 
 
     const props = useTexture({
-        map: './Paper001_1K-JPG_Color.jpg',
-        displacementMap: './Paper001_1K-JPG_Displacement.jpg',
-        normalMap: './Paper001_1K-JPG_NormalGL.jpg',
-        roughnessMap: './Paper001_1K-JPG_Roughness.jpg',
+
+        bumpMap: './Tablet.png',
     })
 
-    props.map.colorSpace = SRGBColorSpace
+    // props.map.colorSpace = SRGBColorSpace
+    // props.bumpMap.repeat = new THREE.Vector2(1, 1)
 
     const blue = Fn(() => {
-        return vec4(236, 232, 223, 255);
+        return vec4(0.0, 0.0, 1.0, 1.0);
     })
 
     const progress = uniform(0.0);
@@ -51,9 +50,10 @@ export default function App() {
     return <>
         <OrbitControls/>
         <mesh ref={paper} position={[1,-1,4]}>
-            <meshStandardNodeMaterial vertexNode={vertex(progress)}{...props} displacementScale={.1} side={THREE.DoubleSide}/>
-            <planeGeometry args={[2, 2, 128, 128]}/>
+            <meshStandardNodeMaterial {...props} displacementScale={.1} bumpScale={3} side={THREE.DoubleSide}/>
+            <planeGeometry args={[1, 1, 128, 128]}/>
         </mesh>
-        <ambientLight intensity={1}/>
+        {/*<ambientLight intensity={.5}/>*/}
+        <directionalLight intensity={1} position={[0, 10, 10]}/>
     </>
 }

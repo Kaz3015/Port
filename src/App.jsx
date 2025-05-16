@@ -1,12 +1,27 @@
 import './App.css'
-import {OrbitControls, useTexture} from "@react-three/drei";
+import {OrbitControls, Text, useTexture} from "@react-three/drei";
 import * as THREE from 'three/webgpu'
 import * as TSL from 'three/tsl'
 import {TextureLoader} from 'three/webgpu'
-import {vec4, Fn, mix, uniform, vec3, mul, cos, sin, positionLocal, cameraProjectionMatrix, sub, modelViewMatrix} from "three/src/Three.TSL.js";
+import {
+    vec4,
+    Fn,
+    mix,
+    uniform,
+    vec3,
+    mul,
+    cos,
+    sin,
+    positionLocal,
+    cameraProjectionMatrix,
+    sub,
+    modelViewMatrix,
+    texture, uv
+} from "three/src/Three.TSL";
 import {SRGBColorSpace} from "three";
 import {useRef} from "react";
 import GUI from 'lil-gui'
+import {useLoader} from "@react-three/fiber";
 
 
 
@@ -19,10 +34,25 @@ export default function App() {
     const props = useTexture({
 
         bumpMap: './Tablet.png',
+        alphaMap: './Tablet.png',
     })
+
+    const tabletProps = useTexture({
+        normalMap: './textures/Tablet/rock_boulder_dry_nor_gl_1k.jpg',
+        roughnessMap: './textures/Tablet/rock_boulder_dry_arm_1k.jpg',
+        aoMap: './textures/Tablet/rock_boulder_dry_arm_1k.jpg',
+        map: './textures/Tablet/rock_boulder_dry_diff_1k.jpg',
+
+    })
+
+    const textureLoder = new TextureLoader()
+    const aboutMeTexture = textureLoder.load('./Tablet.png')
+    console.log(aboutMeTexture)
 
     // props.map.colorSpace = SRGBColorSpace
     // props.bumpMap.repeat = new THREE.Vector2(1, 1)
+
+
 
     const blue = Fn(() => {
         return vec4(0.0, 0.0, 1.0, 1.0);
@@ -45,15 +75,27 @@ export default function App() {
         const finalPos = mix(pos, rolledPos, progress)
 
         return cameraProjectionMatrix.mul( modelViewMatrix ).mul( vec4( finalPos, 1.0 ) );
-    })
+    });
 
+    const wordPlane = Fn(( ) => {
+        const final = texture(aboutMeTexture, uv())
+        return vec4(0, 0,255, final.r);
+        });
+
+    const darkgray = new THREE.Color(0x3b3b3b)
     return <>
         <OrbitControls/>
         <mesh ref={paper} position={[1,-1,4]}>
-            <meshStandardNodeMaterial {...props} displacementScale={.1} bumpScale={3} side={THREE.DoubleSide}/>
-            <planeGeometry args={[1, 1, 128, 128]}/>
+            <meshStandardNodeMaterial {...tabletProps} color={darkgray}/>
+            <boxGeometry args={[1.5, 7, 5]}/>
         </mesh>
-        {/*<ambientLight intensity={.5}/>*/}
-        <directionalLight intensity={1} position={[0, 10, 10]}/>
+        <mesh>
+            <meshStandardNodeMaterial colorNode={wordPlane()} transparent side={THREE.DoubleSide}/>
+            <planeGeometry args={[5, 7]}/>
+        </mesh>
+
+
+        {/*<ambientLight intensity={2}/>*/}
+        {/*<directionalLight intensity={10} position={[1, -1, 2]}/>*/}
     </>
 }

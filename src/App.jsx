@@ -22,6 +22,7 @@ import {SRGBColorSpace} from "three";
 import {useRef} from "react";
 import GUI from 'lil-gui'
 import {useLoader} from "@react-three/fiber";
+import ZeusThunderbolt from "./components/Zeus Thunderbolt.jsx";
 
 
 
@@ -82,20 +83,24 @@ export default function App() {
         return vec4(0, 0,255, final.r);
         });
 
+
     const darkgray = new THREE.Color(0x3b3b3b)
     return <>
         <OrbitControls/>
-        <mesh ref={paper} position={[1,-1,4]}>
-            <meshStandardNodeMaterial {...tabletProps} color={darkgray}/>
-            <boxGeometry args={[1.5, 7, 5]}/>
-        </mesh>
-        <mesh>
-            <meshStandardNodeMaterial colorNode={wordPlane()} transparent side={THREE.DoubleSide}/>
-            <planeGeometry args={[5, 7]}/>
-        </mesh>
+        {/*<mesh ref={paper} position={[1,-1,4]}>*/}
+        {/*    <meshStandardNodeMaterial {...tabletProps} color={darkgray}/>*/}
+        {/*    <boxGeometry args={[1.5, 7, 5]}/>*/}
+        {/*</mesh>*/}
+        {/*<mesh>*/}
+        {/*    <meshStandardNodeMaterial colorNode={wordPlane()} transparent side={THREE.DoubleSide}/>*/}
+        {/*    <planeGeometry args={[5, 7]}/>*/}
+        {/*</mesh>*/}
+        <ZeusThunderbolt/>
 
 
-        {/*<ambientLight intensity={2}/>*/}
+
+
+        <ambientLight intensity={2}/>
         {/*<directionalLight intensity={10} position={[1, -1, 2]}/>*/}
     </>
 }
